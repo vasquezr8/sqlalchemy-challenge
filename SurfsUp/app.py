@@ -58,19 +58,38 @@ def precipitation():
     session = Session(engine)
 
     """Return last 12 months of precipitation data"""
-    # Query all passengers
+    # Query last 12 months of precipitation data
     year_ago = dt.date(2017, 8, 23) - dt.timedelta(days=365)
 
     results = session.query(Measurement.date, Measurement.prcp).filter(Measurement.date >= year_ago).all()
     
     session.close()
+
+    # Create a dictionary from the row data and append to a list of prcp_data
+    prcp_data = []
+    for date, prcp in results:
+        prcp_dict = {}
+        prcp_dict["date"] = date
+        prcp_dict["precipitation"] = prcp
+        prcp_data.append(prcp_dict)
+
+    return jsonify(prcp_data)
+
+@app.route("/api/v1.0/stations")
+def stations():
+    # Create our session (link) from Python to the DB
+    session = Session(engine)
+
+    """Return a list of all stations"""
+    # Query all stations
+    results = session.query(Station.station).all()
     
-    # all_names = [list(r)[0] for r in results]
+    session.close()
 
     # Convert list of tuples into normal list - flattens results
-    last_12_prcp = list(np.ravel(results))
+    all_stations = list(np.ravel(results))
 
-    return jsonify(last_12_prcp)
+    return jsonify(all_stations)
 
 if __name__ == '__main__':
     app.run(debug=True)
