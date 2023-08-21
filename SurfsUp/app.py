@@ -91,5 +91,27 @@ def stations():
 
     return jsonify(all_stations)
 
+@app.route("/api/v1.0/tobs")
+def tobs():
+    # Create our session (link) from Python to the DB
+    session = Session(engine)
+
+    """Return a list of temperature observations from the most active station from the previous year"""
+    # Define last year of data
+    year_ago = dt.date(2017, 8, 23) - dt.timedelta(days=365)
+
+    # Query date and temps from previous year for most active station
+    results = session.query(Measurement.date, Measurement.tobs) \
+    .filter(Measurement.station == "USC00519281") \
+    .filter(Measurement.date >= year_ago) \
+    .all()
+    
+    session.close()
+
+    # Convert list of tuples into normal list - flattens results
+    frequent_station_tobs = list(np.ravel(results))
+
+    return jsonify(frequent_station_tobs)
+
 if __name__ == '__main__':
     app.run(debug=True)
