@@ -48,8 +48,8 @@ def welcome():
         f"/api/v1.0/precipitation<br/>"
         f"/api/v1.0/stations<br/>"
         f"/api/v1.0/tobs<br/>"
-        f"/api/v1.0/start<br/>"
-        f"/api/v1.0/start/end<br/>"
+        f"/api/v1.0/date/<start_date><br/>"
+        f"/api/v1.0/date/<start_date>/<end_date><br/>"
     )
 
 @app.route("/api/v1.0/precipitation")
@@ -112,6 +112,55 @@ def tobs():
     frequent_station_tobs = list(np.ravel(results))
 
     return jsonify(frequent_station_tobs)
+
+@app.route("/api/v1.0/date/<start_date>")
+def get_date(start_date):
+    # Create our session (link) from Python to the DB
+    session = Session(engine)
+
+    """Return the min, max, and average temp after a start date"""
+    # Query min, max, and average temps after a given start date
+    results = session.query(func.min(Measurement.tobs), func.max(Measurement.tobs), func.avg(Measurement.tobs)) \
+    .filter(Measurement.date >= start_date) \
+    .all()
+
+    session.close()
+
+    # Create a dictionary from the row data and append to a list of temp_info_after_start_date
+    temp_info_after_start_date = []
+    for min, max, avg in results:
+        temp_dict = {}
+        temp_dict["min_temp"] = min
+        temp_dict["max_temp"] = max
+        temp_dict["avg_temp"] = avg
+        temp_info_after_start_date.append(temp_dict)
+
+    return jsonify(temp_info_after_start_date)
+
+@app.route("/api/v1.0/date/<start_date>/<end_date>")
+def between_date(start_date, end_date):
+    # Create our session (link) from Python to the DB
+    session = Session(engine)
+
+    """Return the min, max, and average temp between two dates"""
+    # Query min, max, and average temps between a start date and end date
+    results = session.query(func.min(Measurement.tobs), func.max(Measurement.tobs), func.avg(Measurement.tobs)) \
+    .filter(Measurement.date >= start_date) \
+    .filter(Measurement.date <= end_date) \
+    .all()
+
+    session.close()
+
+    # Create a dictionary from the row data and append to a list of temp_info_after_start_date
+    temp_info_between_dates = []
+    for min, max, avg in results:
+        temp_dict = {}
+        temp_dict["min_temp"] = min
+        temp_dict["max_temp"] = max
+        temp_dict["avg_temp"] = avg
+        temp_info_between_dates.append(temp_dict)
+
+    return jsonify(temp_info_between_dates)
 
 if __name__ == '__main__':
     app.run(debug=True)
