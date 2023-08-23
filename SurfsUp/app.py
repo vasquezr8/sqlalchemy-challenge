@@ -48,8 +48,8 @@ def welcome():
         f"/api/v1.0/precipitation<br/>"
         f"/api/v1.0/stations<br/>"
         f"/api/v1.0/tobs<br/>"
-        f"/api/v1.0/date/<start_date><br/>"
-        f"/api/v1.0/date/<start_date>/<end_date><br/>"
+        f"/api/v1.0/date/start_date<br/>"
+        f"/api/v1.0/date/start_date/end_date<br/>"
     )
 
 @app.route("/api/v1.0/precipitation")
@@ -69,8 +69,7 @@ def precipitation():
     prcp_data = []
     for date, prcp in results:
         prcp_dict = {}
-        prcp_dict["date"] = date
-        prcp_dict["precipitation"] = prcp
+        prcp_dict[date] = prcp
         prcp_data.append(prcp_dict)
 
     return jsonify(prcp_data)
@@ -101,7 +100,7 @@ def tobs():
     year_ago = dt.date(2017, 8, 23) - dt.timedelta(days=365)
 
     # Query date and temps from previous year for most active station
-    results = session.query(Measurement.date, Measurement.tobs) \
+    results = session.query(Measurement.tobs) \
     .filter(Measurement.station == "USC00519281") \
     .filter(Measurement.date >= year_ago) \
     .all()
@@ -151,14 +150,14 @@ def between_date(start_date, end_date):
 
     session.close()
 
-    # Create a dictionary from the row data and append to a list of temp_info_after_start_date
+    # Create a dictionary from the row data and append to a list of temp_info_between_dates
     temp_info_between_dates = []
     for min, max, avg in results:
-        temp_dict = {}
-        temp_dict["min_temp"] = min
-        temp_dict["max_temp"] = max
-        temp_dict["avg_temp"] = avg
-        temp_info_between_dates.append(temp_dict)
+        temp_dict2 = {}
+        temp_dict2["min_temp"] = min
+        temp_dict2["max_temp"] = max
+        temp_dict2["avg_temp"] = avg
+        temp_info_between_dates.append(temp_dict2)
 
     return jsonify(temp_info_between_dates)
 
