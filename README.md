@@ -4,7 +4,7 @@
 
 I decided to treat myself to a long holiday vacation in Honolulu, Hawaii. To help with trip planning, I chose to conduct a climate analysis of the area using Python, SQLAlchemy, and Flask. Here's how I accomplished this task:
 
-### Part 1: Analyzed and Explored the Climate Data
+## Part 1: Analyzed and Explored the Climate Data
 
 In this section, I used Python and SQLAlchemy to perform a basic climate analysis and data exploration of the climate database. Here are the steps I followed:
 
@@ -18,9 +18,7 @@ In this section, I used Python and SQLAlchemy to perform a basic climate analysi
 
 5. **Station Analysis**: I performed a station analysis to calculate the total number of stations, find the most-active stations, and retrieve temperature observation data for the most-active station.
 
-6. **Closed the Session**: Remembering to close my session at the end of my notebook.
-
-### Part 2: Designed My Climate App
+## Part 2: Designed My Climate App
 
 After completing the initial analysis, I designed a Flask API based on the queries developed. Here's how I designed the Flask routes:
 
