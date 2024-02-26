@@ -30,7 +30,7 @@ After completing the initial analysis, I designed a Flask API based on the queri
 
 4. **/api/v1.0/tobs**: I queried temperature observations of the most-active station for the previous year of data and returned a JSON list.
 
-5. **/api/v1.0/<start> and /api/v1.0/<start>/<end>**: I returned a JSON list of the minimum, average, and maximum temperatures for a specified start or start-end range.
+5. **/api/v1.0/date/start_date and /api/v1.0/date/start_date/end_date**: I returned a JSON list of the minimum, average, and maximum temperatures for a specified start or start-end range.
 
 ## Code Citation
 
